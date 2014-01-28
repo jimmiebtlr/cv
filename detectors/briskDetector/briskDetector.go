@@ -17,12 +17,12 @@ type Detector struct {
 
 type PxVal func(x, y int, d *Detector) (val int)
 
-func RGBPointValue( x, y int, d *Detector)( val int ){
-  r,g,b,_ := d.img.At(x,y).RGBA()
+func RGBPointValue(x, y int, d *Detector) (val int) {
+  r, g, b, _ := d.img.At(x, y).RGBA()
   return int(r + g + b)
 }
 
-func (d *Detector) examineArea(x int, y int, layer uint) (above, below bool) {
+func (d *Detector) examineArea(x int, y int) (above, below bool) {
   // if within 3 of one of the edges, don't do anything (yet)
   if d.img.Bounds().Max.X+r > x {
     return false, false
