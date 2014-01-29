@@ -1,3 +1,4 @@
+// briskDetector package provides the beginning of a brisk detector implementation.
 package briskDetector
 
 import (
@@ -19,18 +20,18 @@ type PxVal func(x, y int, d *Detector) (val int)
 
 func RGBPointValue(x, y int, d *Detector) (val int) {
   r, g, b, _ := d.img.At(x, y).RGBA()
-  return int(r + g + b)
+  return int(r/3 + g/3 + b/3)
 }
 
 func (d *Detector) examineArea(x int, y int) (above, below bool) {
   // if within 3 of one of the edges, don't do anything (yet)
-  if d.img.Bounds().Max.X+r > x {
+  if d.img.Bounds().Max.X+r < x {
     return false, false
   }
   if d.img.Bounds().Min.Y+r > y {
     return false, false
   }
-  if d.img.Bounds().Max.X-r < x {
+  if d.img.Bounds().Min.X-r > x {
     return false, false
   }
   if d.img.Bounds().Max.Y-r < y {
