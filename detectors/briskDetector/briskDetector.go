@@ -6,7 +6,7 @@ import (
 )
 
 const (
-  r = 3
+  r = 4
   n = 9
 )
 
@@ -23,6 +23,7 @@ func RGBPointValue(x, y int, d *Detector) (val int) {
   return int(r/3 + g/3 + b/3)
 }
 
+// examineArea 
 func (d *Detector) examineArea(x int, y int) (above, below bool) {
   // if within 3 of one of the edges, don't do anything (yet)
   if d.img.Bounds().Max.X+r < x {
@@ -40,11 +41,16 @@ func (d *Detector) examineArea(x int, y int) (above, below bool) {
 
   abv := uint(0)
   bel := uint(0)
-  for i := 0; i < r*r; i++ {
+  // TODO
+  // 23 is 4! - 1 
+  for i := 0; i < 23; i++ {
+    dx := offsets[i][0]
+    dy := offsets[i][1]
+
     // check if above or below threshold
-    if d.Value(x, y, d) > (d.Value(x, y, d) - d.threshold) {
+    if d.Value(x+dx, y+dy, d) > (d.Value(x, y, d) + d.threshold) {
       abv++
-    } else if d.Value(x, y, d) < (d.Value(x, y, d) - d.threshold) {
+    } else if d.Value(x+dx, y+dy, d) < (d.Value(x, y, d) - d.threshold) {
       bel++
     }
   }
