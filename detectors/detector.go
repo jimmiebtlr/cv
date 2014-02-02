@@ -1,5 +1,5 @@
-// briskDetector package provides the very basic beginning of a brisk detector implementation.
-package briskDetector
+// Detector package provides the very basic beginning of a image keypoint detector implementation.
+package detector
 
 import (
   "image"

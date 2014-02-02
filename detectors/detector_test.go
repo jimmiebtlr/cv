@@ -1,4 +1,4 @@
-package briskDetector
+package detector
 
 import (
   "image"
