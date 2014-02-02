@@ -1,4 +1,3 @@
 cv
 ==
-
-Go library for computer vision.
+The beginning of a go library for computer vision
