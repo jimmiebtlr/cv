@@ -9,4 +9,6 @@ type Descriptor struct{
 }
 
 func CalcDescriptors( points chan image.Point, descr chan Descriptor ){
+  // Calculate multiple rotations
+  // compact and order them
 }
