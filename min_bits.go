@@ -16,8 +16,10 @@ func MinBits(value int) (min int, reversed bool) {
   curStart := 0
   curLen := 0
 
-  for i := 0; i < len(bits)*2; i++ {
-    if bits[i] == '0' {
+  l := len(bits)
+
+  for i := 0; i < l*2; i++ {
+    if bits[i%l] == '0' {
       if curLen == 0 {
         curStart = i
       }
@@ -32,7 +34,17 @@ func MinBits(value int) (min int, reversed bool) {
     }
   }
 
+  minStr := bits[maxStart:]
+  if maxStart > 0 {
+    minStr += bits[:maxStart - 1]
+  }
+  mintmp,err := strconv.ParseInt( minStr, 2, 64)
+  min = int( mintmp )
+  if err != nil {
+    // rabble
+  }
+
   // find longest string of zero's
   // determine if reverse is smaller than normal ordering
-  return 0, false
+  return min, false
 }
