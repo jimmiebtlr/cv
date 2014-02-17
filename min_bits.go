@@ -20,18 +20,27 @@ func MinBits(value uint) (min uint, reversed bool) {
     minStr = bits[zerosStart+zerosLen:] + bits[:zerosStart]
   }
 
-  mintmp, err := strconv.ParseUint(minStr, 2, 64)
-
-  min = uint(mintmp)
+  // unreversed case
+  mintmp := uint64(0)
+  var err error
+  if minStr != "" {
+    mintmp, err = strconv.ParseUint(minStr, 2, 64)
+  }
   if err != nil {
+    log.Printf("Error: %v", err )
     log.Fatal("MinBits parse uint failed" )
   }
 
-  // Find the reverse value
-  mintmpRev, err := strconv.ParseUint(revStr(minStr), 2, 64)
+  // Reversed case
+  mintmpRev := uint64(0)
+  if minStr != "" {
+    mintmpRev, err = strconv.ParseUint(revStr(minStr), 2, 64)
+  }
   if err != nil {
+    log.Printf("Error: %v", err )
     log.Fatal("MinBits parse uint failed" )
   }
+
 
   // if the reversed string is smaller use it
   if mintmpRev < mintmp {
