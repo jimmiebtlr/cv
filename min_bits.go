@@ -10,9 +10,14 @@ import (
 func MinBits(value uint) (min uint, reversed bool) {
   bits := strconv.FormatUint(uint64(value), 2)
 
-  zerosStart, zerosEnd := maxZerosRun(bits)
+  zerosStart, zerosLen := maxZerosRun(bits)
 
-  minStr := bits[zerosStart:] + bits[:zerosEnd]
+  minStr := ""
+  if zerosStart + zerosLen > len(bits){
+    minStr = bits[:zerosStart + zerosLen] + bits[zerosStart:]
+  }else{
+    minStr = bits[zerosStart+zerosLen:] + bits[:zerosStart]
+  }
 
   mintmp, err := strconv.ParseUint(minStr, 2, 64)
 
@@ -21,21 +26,23 @@ func MinBits(value uint) (min uint, reversed bool) {
     // rabble
   }
 
-  minRevStr := ""
-  for _, v := range minStr {
-    minRevStr = string(v) + minRevStr
-  }
-  mintmpRev, err := strconv.ParseUint(minRevStr, 2, 64)
+  mintmpRev, err := strconv.ParseUint(revStr(minStr), 2, 64)
 
+  // if the reversed string is smaller use it
   if mintmpRev < mintmp {
     min = uint(mintmpRev)
   } else {
     min = uint(mintmp)
   }
 
-  // find longest string of zero's
-  // determine if reverse is smaller than normal ordering
   return min, false
+}
+
+func revStr( str string) (rev string ){
+  for _, v := range str {
+    rev = string(v) + rev
+  }
+  return rev
 }
 
 // maxZerosRun returns the start and end index of the larges consecutive

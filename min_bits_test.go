@@ -1,53 +1,47 @@
 package cv
 
 import (
-  //"math"
-  //"strconv"
+  "math"
   "testing"
 )
 
+var maxZerosRunTests = []struct {
+  in     string
+  start  int
+  length int
+}{
+  {"0", 0, 1},
+  {"010", 2, 2},
+  {"101000", 3, 3},
+  {"1000101", 1, 3},
+  {"1000101", 1, 3},
+}
+
 func TestMaxZerosRun(t *testing.T) {
-  if start, l := maxZerosRun("0"); start != 0 || l != 1 {
-    t.Logf("Expected start = 0 and length = 1 actual start = %v and length = %v", start, l)
-    t.Fail()
-  }
-  if start, l := maxZerosRun("010"); start != 2 || l != 2 {
-    t.Logf("Expected start = 2 and length = 1 actual start = %v and length = %v", start, l)
-    t.Fail()
-  }
-  if start, end := maxZerosRun("1000101"); start != 1 || end != 3 {
-    t.Logf("Expected start = 1 and end = 3 actual start = %v and end = %v", start, end)
-    t.Fail()
+  for _, v := range maxZerosRunTests {
+    if start, length := maxZerosRun(v.in); start != v.start || length != v.length {
+      t.Logf("Expected start = 0 and length = 1 actual start = %v and length = %v", start, length)
+      t.Fail()
+    }
   }
 }
 
-/*
+var minBitsZeroTests = []struct {
+  in  uint
+  out uint
+}{
+  {0, 0},
+  {math.MaxInt32, math.MaxInt32},
+  {32, 1},   // binary "100000"
+  {40, 5},   // binary "101000"
+  {104, 11}, // binary "1101000"
+}
+
 func TestMinBitsZero(t *testing.T) {
-  if min, _ := MinBits(uint(0)); min != 0 {
-    t.Logf("Expected 0 got %b", min)
-    t.FailNow()
+  for _, v := range minBitsZeroTests {
+    if min, _ := MinBits(v.in); min != v.out {
+      t.Logf("Expected %b actual %b", v.out, min)
+      t.Fail()
+    }
   }
-
-  if min, _ := MinBits(math.MaxInt32); min != math.MaxInt32 {
-    t.Logf("Expected %b got %b", math.MaxInt32, min)
-    t.FailNow()
-  }
-
-  v, _ := strconv.ParseInt("100000", 2, 64)
-  if min, _ := MinBits(uint(v)); min != 1 {
-    t.Logf("Expected %b got %b", 1, min)
-    t.FailNow()
-  }
-
-  v, _ = strconv.ParseInt("101000", 2, 64)
-  if min, _ := MinBits(uint(v)); min != 5 {
-    t.Logf("Expected %b got %b", 5, min)
-    t.FailNow()
-  }
-
-  v, _ = strconv.ParseInt("1101000", 2, 64)
-  if min, _ := MinBits(uint(v)); min != 11 {
-    t.Logf("Expected %b got %b", 11, min)
-    t.Fail()
-  }
-}*/
+}
