@@ -2,37 +2,34 @@ package cv
 
 import (
   "strconv"
-  "fmt"
 )
 
 // MinBits returns the smallest possible value while not
 // changing the order of the bits.  It does however allow
 // reversal of the bits.
 func MinBits(value uint) (min uint, reversed bool) {
-  bits := fullLenUintStr( value )
+  bits := strconv.FormatUint(uint64(value), 2)
 
-  zerosStart, zerosEnd := maxZerosRun( bits )
+  zerosStart, zerosEnd := maxZerosRun(bits)
 
   minStr := bits[zerosStart:] + bits[:zerosEnd]
 
+  mintmp, err := strconv.ParseUint(minStr, 2, 64)
 
-  mintmp,err := strconv.ParseUint( minStr, 2, 64)
-
-  min = uint( mintmp )
+  min = uint(mintmp)
   if err != nil {
     // rabble
   }
 
   minRevStr := ""
-  for _,v := range minStr {
+  for _, v := range minStr {
     minRevStr = string(v) + minRevStr
   }
-  fmt.Println( minRevStr )
-  mintmpRev, err := strconv.ParseUint( minRevStr, 2, 64 )
+  mintmpRev, err := strconv.ParseUint(minRevStr, 2, 64)
 
   if mintmpRev < mintmp {
     min = uint(mintmpRev)
-  }else{
+  } else {
     min = uint(mintmp)
   }
 
@@ -41,19 +38,9 @@ func MinBits(value uint) (min uint, reversed bool) {
   return min, false
 }
 
-// fullLenUintStr returns the value as binary string 
-// with precending 0's correctly filled in
-func fullLenUintStr( v uint )( vstr string ){
-  bits := strconv.FormatUint(uint64(v), 2)
-  for i := len(bits); i < 32; i++ {
-    bits = "0" + bits
-  }
-  return bits
-}
-
 // maxZerosRun returns the start and end index of the larges consecutive
 // run of zeros in the string
-func maxZerosRun( bits string )( start, end int ){
+func maxZerosRun(bits string) (start, length int) {
   maxStart := 0
   maxLen := 0
 
@@ -76,8 +63,16 @@ func maxZerosRun( bits string )( start, end int ){
       curLen = 0
       curStart = 0
     }
-    fmt.Printf( "%v %v \n", curStart, curLen )
-    fmt.Printf( "%v \n", bits[i%l] )
   }
-  return maxStart, (maxStart+maxLen) % len( bits )
+
+  if maxLen < curLen {
+    maxLen = curLen
+    maxStart = curStart
+  }
+
+  if maxLen > l {
+    return maxStart, l
+  } else {
+    return maxStart, maxLen
+  }
 }
