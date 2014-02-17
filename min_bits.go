@@ -2,6 +2,7 @@ package cv
 
 import (
   "strconv"
+  "log"
 )
 
 // MinBits returns the smallest possible value while not
@@ -23,21 +24,27 @@ func MinBits(value uint) (min uint, reversed bool) {
 
   min = uint(mintmp)
   if err != nil {
-    // rabble
+    log.Fatal("MinBits parse uint failed" )
   }
 
+  // Find the reverse value
   mintmpRev, err := strconv.ParseUint(revStr(minStr), 2, 64)
+  if err != nil {
+    log.Fatal("MinBits parse uint failed" )
+  }
 
   // if the reversed string is smaller use it
   if mintmpRev < mintmp {
     min = uint(mintmpRev)
+    reversed = true
   } else {
     min = uint(mintmp)
   }
 
-  return min, false
+  return min, reversed
 }
 
+// revStr finds the exact reverse of the input string
 func revStr( str string) (rev string ){
   for _, v := range str {
     rev = string(v) + rev
