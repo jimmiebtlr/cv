@@ -32,8 +32,8 @@ var minBitsZeroTests = []struct {
 }{
   {"0", 0},
   {strconv.FormatUint(math.MaxUint32, 2), math.MaxUint32},
-  {"100000", 1}, // binary "100000"
-  {"101000", 5}, // binary "101000"
+  {"100000", 1},
+  {"101000", 5},
 }
 
 func TestMinBitsZero(t *testing.T) {
@@ -51,8 +51,8 @@ var minBitsZeroRevTests = []struct {
   out      uint
   reversed bool
 }{
-  {"1101000", 11, true}, // binary "1101000"
-  {"1101000", 11, true}, // binary "1101000"
+  {"1101000", 11, true},
+  {"101111", 31, false},
 }
 
 func TestMinBitsZeroRev(t *testing.T) {
