@@ -1,4 +1,4 @@
-package briskDescriptor
+package descriptor
 
 import (
   "github.com/jimmiebtlr/cv"
@@ -16,6 +16,11 @@ type Descriptor struct {
 
 type PxVal func(x, y int, img image.Image) (val int)
 
+func RGBPointValue(x, y int, img image.Image) (val int) {
+  r, g, b, _ := img.At(x, y).RGBA()
+  return int(r/3 + g/3 + b/3)
+}
+
 func CalcDescriptors(points chan image.Point, img image.Image, descr chan Descriptor, f PxVal) {
   for p := range points {
     descr <- calcDescriptor(p, img, f)
@@ -27,6 +32,7 @@ func calcDescriptor(point image.Point, img image.Image, f PxVal) (desc Descripto
   for i := 0; i < 16; i++ {
     v += uint16(math.Pow(float64(pointVal(i, point, img, f)), float64(i)))
   }
+  desc = Descriptor{v}
   return desc
 }
 
