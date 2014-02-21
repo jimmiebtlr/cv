@@ -18,15 +18,20 @@ func TestDescriptor(t *testing.T) {
     }
   }
 
-  points := make(chan image.Point)
-  points <- image.Point{16, 16}
+  points := make(chan image.Point, 2)
+
+  go func() {
+    points <- image.Point{16, 16}
+    close(points)
+  }()
+
   desc := make(chan Descriptor)
   CalcDescriptors(points, img, desc, RGBPointValue)
 
   i := 0
   for d := range desc {
-    if d == 15 {
-      t.Logf("CalcDescriptor should have returned exactly 1 descriptor, given 1 point")
+    if d.base != 15 {
+      t.Logf("Base value of descriptor should be 15, instead it was %v", d.base)
       t.Fail()
     }
     i++

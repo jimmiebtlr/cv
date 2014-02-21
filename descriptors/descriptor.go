@@ -11,7 +11,7 @@ const (
 )
 
 type Descriptor struct {
-  uint16
+  base uint16
 }
 
 type PxVal func(x, y int, img image.Image) (val int)
@@ -22,9 +22,14 @@ func RGBPointValue(x, y int, img image.Image) (val int) {
 }
 
 func CalcDescriptors(points chan image.Point, img image.Image, descr chan Descriptor, f PxVal) {
+  go fillDescrChan(points, img, descr, f)
+}
+
+func fillDescrChan(points chan image.Point, img image.Image, descr chan Descriptor, f PxVal) {
   for p := range points {
     descr <- calcDescriptor(p, img, f)
   }
+  close(descr)
 }
 
 func calcDescriptor(point image.Point, img image.Image, f PxVal) (desc Descriptor) {
@@ -32,7 +37,8 @@ func calcDescriptor(point image.Point, img image.Image, f PxVal) (desc Descripto
   for i := 0; i < 16; i++ {
     v += uint16(math.Pow(float64(pointVal(i, point, img, f)), float64(i)))
   }
-  desc = Descriptor{v}
+  v2, _ := cv.MinBits(uint(v))
+  desc = Descriptor{uint16(v2)}
   return desc
 }
 
