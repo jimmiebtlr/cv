@@ -1,9 +1,10 @@
 package descriptor
 
 import (
+  "fmt"
   "github.com/jimmiebtlr/cv"
+  "github.com/jimmiebtlr/mask"
   "image"
-  "math"
 )
 
 const (
@@ -33,9 +34,9 @@ func fillDescrChan(points chan image.Point, img image.Image, descr chan Descript
 }
 
 func calcDescriptor(point image.Point, img image.Image, f PxVal) (desc Descriptor) {
-  v := uint16(0)
+  v := 0
   for i := 0; i < 16; i++ {
-    v += uint16(math.Pow(float64(pointVal(i, point, img, f)), float64(i)))
+    v += pointVal(i, point, img, f)
   }
   v2, _ := cv.MinBits(uint(v))
   desc = Descriptor{uint16(v2)}
@@ -45,10 +46,20 @@ func calcDescriptor(point image.Point, img image.Image, f PxVal) (desc Descripto
 // pointVal returns 1 if the index in question is greater than point and
 // 0 if it is less
 func pointVal(i int, point image.Point, img image.Image, f PxVal) (val int) {
-  dx, dy := cv.DiamondOffset(i, r)
+  dx, dy := mask.DiamondOffset(i, r)
+  fmt.Printf("dx: %v dy: %v", dx, dy)
   if f(point.X, point.Y, img) < f(point.X+dx, point.Y+dy, img) {
     return 0
   } else {
-    return 1
+    return 1 * pow(2, i)
   }
+}
+
+func pow(v, exp int) (ret int) {
+  ret = 1
+  for i := 0; i < exp; i++ {
+    ret *= v
+  }
+  fmt.Println(ret)
+  return ret
 }

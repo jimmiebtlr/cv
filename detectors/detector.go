@@ -2,12 +2,13 @@
 package detector
 
 import (
+  "github.com/jimmiebtlr/mask"
   "image"
 )
 
 const (
-  r = 4
-  n = 12
+  r = 3
+  n = 9
 )
 
 type Detector struct {
@@ -24,17 +25,17 @@ func RGBPointValue(x, y int, d *Detector) (val int) {
 }
 
 // Keypoints launches a go routine which fills the passed in channel of points.
-func (d *Detector)Keypoints(ch chan image.Point){
+func (d *Detector) Keypoints(ch chan image.Point) {
   go d.fillKeypointBuffer(ch)
 }
 
 // fillKeypointBuffer loops through all pixels in detector.img and adds to chan
 // if it was a keypoint.
-func (d *Detector)fillKeypointBuffer( ch chan image.Point){
-  for x := d.img.Bounds().Min.X; x < d.img.Bounds().Max.X; x++{
-    for y := d.img.Bounds().Min.Y; y < d.img.Bounds().Max.Y; y++{
-      if d.examineArea(x,y){
-        ch <- image.Point{x,y}
+func (d *Detector) fillKeypointBuffer(ch chan image.Point) {
+  for x := d.img.Bounds().Min.X; x < d.img.Bounds().Max.X; x++ {
+    for y := d.img.Bounds().Min.Y; y < d.img.Bounds().Max.Y; y++ {
+      if d.examineArea(x, y) {
+        ch <- image.Point{x, y}
       }
     }
   }
@@ -60,11 +61,8 @@ func (d *Detector) examineArea(x int, y int) (keypoint bool) {
 
   abv := uint(0)
   bel := uint(0)
-  // TODO
-  // 23 is 4! - 1 
-  for i := 0; i < 23; i++ {
-    dx := offsets[i][0]
-    dy := offsets[i][1]
+  for i := 0; i < 16; i++ {
+    dx, dy := mask.DiamondOffset(i, r)
 
     // check if above or below threshold
     if d.Value(x+dx, y+dy, d) > (d.Value(x, y, d) + d.threshold) {
