@@ -1,8 +1,8 @@
 package cv
 
 import (
-  "strconv"
   "log"
+  "strconv"
 )
 
 // MinBits returns the smallest possible value while not
@@ -14,9 +14,9 @@ func MinBits(value uint) (min uint, reversed bool) {
   zerosStart, zerosLen := maxZerosRun(bits)
 
   minStr := ""
-  if zerosStart + zerosLen > len(bits){
-    minStr = bits[:zerosStart + zerosLen] + bits[zerosStart:]
-  }else{
+  if zerosStart+zerosLen > len(bits) {
+    minStr = bits[:zerosStart+zerosLen] + bits[zerosStart:]
+  } else {
     minStr = bits[zerosStart+zerosLen:] + bits[:zerosStart]
   }
 
@@ -27,8 +27,8 @@ func MinBits(value uint) (min uint, reversed bool) {
     mintmp, err = strconv.ParseUint(minStr, 2, 64)
   }
   if err != nil {
-    log.Printf("Error: %v", err )
-    log.Fatal("MinBits parse uint failed" )
+    log.Printf("Error: %v", err)
+    log.Fatal("MinBits parse uint failed")
   }
 
   // Reversed case
@@ -37,10 +37,9 @@ func MinBits(value uint) (min uint, reversed bool) {
     mintmpRev, err = strconv.ParseUint(revStr(minStr), 2, 64)
   }
   if err != nil {
-    log.Printf("Error: %v", err )
-    log.Fatal("MinBits parse uint failed" )
+    log.Printf("Error: %v", err)
+    log.Fatal("MinBits parse uint failed")
   }
-
 
   // if the reversed string is smaller use it
   if mintmpRev < mintmp {
@@ -54,7 +53,7 @@ func MinBits(value uint) (min uint, reversed bool) {
 }
 
 // revStr finds the exact reverse of the input string
-func revStr( str string) (rev string ){
+func revStr(str string) (rev string) {
   for _, v := range str {
     rev = string(v) + rev
   }

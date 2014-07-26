@@ -1,9 +1,8 @@
 package descriptor
 
 import (
-  "fmt"
   "github.com/jimmiebtlr/cv"
-  "github.com/jimmiebtlr/mask"
+  "github.com/jimmiebtlr/cv/mask"
   "image"
 )
 
@@ -13,6 +12,10 @@ const (
 
 type Descriptor struct {
   base uint16
+}
+
+func (d *Descriptor) Value() (val uint16) {
+  return d.base
 }
 
 type PxVal func(x, y int, img image.Image) (val int)
@@ -47,7 +50,6 @@ func calcDescriptor(point image.Point, img image.Image, f PxVal) (desc Descripto
 // 0 if it is less
 func pointVal(i int, point image.Point, img image.Image, f PxVal) (val int) {
   dx, dy := mask.DiamondOffset(i, r)
-  fmt.Printf("dx: %v dy: %v", dx, dy)
   if f(point.X, point.Y, img) < f(point.X+dx, point.Y+dy, img) {
     return 0
   } else {
@@ -60,6 +62,5 @@ func pow(v, exp int) (ret int) {
   for i := 0; i < exp; i++ {
     ret *= v
   }
-  fmt.Println(ret)
   return ret
 }

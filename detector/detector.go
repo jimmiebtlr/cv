@@ -2,7 +2,7 @@
 package detector
 
 import (
-  "github.com/jimmiebtlr/mask"
+  "github.com/jimmiebtlr/cv/mask"
   "image"
 )
 
@@ -15,6 +15,13 @@ type Detector struct {
   threshold int
   img       image.Image
   Value     PxVal
+}
+
+func NewDetector(threshold int, img image.Image, ValueFunc PxVal) (d Detector) {
+  d.threshold = threshold
+  d.img = img
+  d.Value = ValueFunc
+  return d
 }
 
 type PxVal func(x, y int, d *Detector) (val int)
@@ -34,7 +41,7 @@ func (d *Detector) Keypoints(ch chan image.Point) {
 func (d *Detector) fillKeypointBuffer(ch chan image.Point) {
   for x := d.img.Bounds().Min.X; x < d.img.Bounds().Max.X; x++ {
     for y := d.img.Bounds().Min.Y; y < d.img.Bounds().Max.Y; y++ {
-      if d.examineArea(x, y) {
+      if d.isKeypoint(x, y) {
         ch <- image.Point{x, y}
       }
     }
@@ -44,7 +51,7 @@ func (d *Detector) fillKeypointBuffer(ch chan image.Point) {
 
 // examineArea looks in the area surrounding x,y.
 // if n points are above or n points are below, return keypoint=true.
-func (d *Detector) examineArea(x int, y int) (keypoint bool) {
+func (d *Detector) isKeypoint(x int, y int) (keypoint bool) {
   // if within 3 of one of the edges, don't do anything (yet)
   if d.img.Bounds().Max.X-r < x {
     return false
@@ -78,4 +85,9 @@ func (d *Detector) examineArea(x int, y int) (keypoint bool) {
     return true
   }
   return false
+}
+
+// Setters
+func (d *Detector) SetImage(img image.Image) {
+  d.img = img
 }
