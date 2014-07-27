@@ -1,23 +1,18 @@
 package descriptor
 
 import (
-  "github.com/jimmiebtlr/ui/easy"
   "image"
+  "image/png"
+  "os"
   "testing"
 )
 
 func TestDescriptor(t *testing.T) {
-  img := image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{32, 32}})
-
-  for i := 0; i <= 32; i++ {
-    for j := 0; j <= 32; j++ {
-      if j >= 16 && i >= 16 {
-        img.Set(i, j, image.White)
-      } else {
-        img.Set(i, j, image.Black)
-      }
-    }
+  square, err := os.Open("../test/images/square.png")
+  if err != nil {
+    t.Fatal(err)
   }
+  img, err := png.Decode(square)
 
   points := make(chan image.Point, 2)
 
@@ -31,7 +26,7 @@ func TestDescriptor(t *testing.T) {
 
   i := 0
   for d := range desc {
-    if d.base != 15 {
+    if d.base != 16191 {
       t.Logf("Base value of descriptor should be 15, instead it was %v", d.base)
       t.Fail()
     }
@@ -44,19 +39,16 @@ func TestDescriptor(t *testing.T) {
 }
 
 func TestDescriptorZero(t *testing.T) {
-  img := image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{32, 32}})
-  easy.ShowImage(img)
-
-  for i := 0; i <= 32; i++ {
-    for j := 0; j <= 32; j++ {
-      img.Set(i, j, image.White)
-    }
+  square, err := os.Open("../test/images/square.png")
+  if err != nil {
+    t.Fatal(err)
   }
+  img, err := png.Decode(square)
 
   points := make(chan image.Point, 2)
 
   go func() {
-    points <- image.Point{16, 16}
+    points <- image.Point{4, 4}
     close(points)
   }()
 

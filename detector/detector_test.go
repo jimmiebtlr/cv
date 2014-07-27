@@ -9,7 +9,7 @@ import (
 )
 
 func TestExamineAreaBelow(t *testing.T) {
-  square, err := os.Open("square.png")
+  square, err := os.Open("../test/images/square.png")
 
   if err != nil {
     t.Fatal(err)
@@ -32,12 +32,10 @@ func TestExamineAreaBelow(t *testing.T) {
 }
 
 func TestExamineAreaAbove(t *testing.T) {
-  square, err := os.Open("square.png")
-
+  square, err := os.Open("../test/images/square.png")
   if err != nil {
     t.Fatal(err)
   }
-
   img, err := png.Decode(square)
 
   d := Detector{}
@@ -51,7 +49,7 @@ func TestExamineAreaAbove(t *testing.T) {
 }
 
 func TestKeypoints(t *testing.T) {
-  square, err := os.Open("square.png")
+  square, err := os.Open("../test/images/square.png")
 
   if err != nil {
     t.Fatal(err)
